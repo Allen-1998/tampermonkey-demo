@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="box">
+      <div class="item">111</div>
+      <a href="https:www.baidu.com" class="item xx">222</a>
+      <div class="item xx">333</div>
+      <div class="item xx">333</div>
+    </div>
+  </body>
+  <script>
+    const heads = document.querySelector("head");
+    const style = document.createElement("style");
+    style.setAttribute("type", "text/css");
+    style.innerHTML = `
+      * {
+        cursor: pointer;
+        outline: 1px solid #000 !important;
+      }
+      *:hover {
+        background: #00f1;
+      }
+    `;
+    heads.append(style);
+
+    document.addEventListener("click", (e) => {
+      e.preventDefault();
+      let el = e.target;
+      let fullSelector = "";
+      function getClassName(node) {
+        if (!node) return "";
+        let className = node.className;
+        if (className) {
+          className = "." + className.replace(/\s+/g, ".");
+        }
+        return className;
+      }
+      while (el.nodeType === Node.ELEMENT_NODE) {
+        let selector = el.nodeName.toLowerCase();
+        if (el.id) {
+          selector += "#" + el.id;
+          fullSelector = `${selector}${
+            fullSelector ? " > " : ""
+          }${fullSelector}`;
+          break;
+        } else {
+          let sib = el,
+            nth = 1,
+            sameClass = 1,
+            sibClassName = getClassName(sib);
+          while ((sib = sib.previousElementSibling)) {
+            if (sib.nodeName.toLowerCase() == selector) {
+              nth++;
+              if (sibClassName === getClassName(sib)) {
+                sameClass++;
+              }
+            }
+          }
+          if (sameClass === 1) {
+            selector += sibClassName;
+          } else if (nth !== 1) {
+            selector += `:nth-of-type(${nth})`;
+          }
+          el = el.parentNode;
+          fullSelector = `${selector}${
+            fullSelector ? " > " : ""
+          }${fullSelector}`;
+          const target = document.querySelectorAll(fullSelector);
+          if (target.length === 1) {
+            break;
+          }
+        }
+      }
+      console.log(fullSelector);
+      const target = document.querySelector(fullSelector);
+      target.style = "background: #0f03;" + target.style;
+    });
+  </script>
+</html>
