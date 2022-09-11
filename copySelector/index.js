@@ -5,6 +5,7 @@
 // @description  Gets the shortest selector for a page element. The effect is the same as Chrome DevTools Copy Selector.
 // @author       Allen-1998
 // @match        *://*/*
+// @license      BSD-3-Clause license
 // ==/UserScript==
 
 (function () {
