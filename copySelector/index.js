@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         copy selector
+// @namespace    https://github.com/Allen-1998
 // @version      0.1
-// @description  获取页面元素最短 selector，效果同 chrome devtools 的 copy selector
+// @description  Gets the shortest selector for a page element. The effect is the same as Chrome DevTools Copy Selector.
+// @author       Allen-1998
 // @match        *://*/*
-// @grant        none
 // ==/UserScript==
 
 (function () {
@@ -45,7 +46,7 @@
       top: 0;
       right: 0;
       background: #fff;
-      box-shadow: 0 0 5px 5px #0003;
+      box-shadow: 0 0 5px 5px #0002;
       padding: 10px;
       display: flex;
       align-items: center;
