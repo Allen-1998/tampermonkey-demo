@@ -12,19 +12,15 @@
   const head = document.querySelector("head");
   const style = document.createElement("style");
   style.setAttribute("type", "text/css");
-  style.innerHTML = `
-    * {
-      cursor: pointer;
-      outline: 1px solid #000 !important;
-    }
-    .selector-hover {
+  style.innerText = `
+    .copy-selector-hover {
       background: #00f3;
     }
-    .selector-focus {
+    .copy-selector-focus {
       background: #0f03;
     }
 
-    .copy-success-message {
+    #copy-success-message {
       position: fixed;
       top: 0;
       left: 50%;
@@ -40,9 +36,53 @@
       pointer-events: none !important;
       z-index: 2147483647;
     }
-
     .show-copy-success-message {
       animation: copySuccessMessage 2s;
+    }
+
+    #copy-selector-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      background: #fff;
+      box-shadow: 0 0 5px 5px #0003;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      font-size: 14px !important;
+      outline-style: none !important;
+      z-index: 2147483647;
+    }
+    #copy-selector-switch {
+      position: relative;
+      appearance: none;
+      outline: none;
+      width: 24px;
+      height: 14px;
+      border: 1px solid #999;
+      background: #999;
+      border-radius: 10px;
+      transition: background-color 0.1s, border 0.1s;
+      outline-style: none !important;
+    }
+    #copy-selector-switch:after {
+      content: " ";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 12px;
+      width: 12px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      transition: transform 0.35s cubic-bezier(0.4, 0.4, 0.25, 1.35);
+    }
+    #copy-selector-switch:checked {
+      background: #67c23a;
+      border: 1px solid #67c23a;
+    }
+    #copy-selector-switch:checked:after {
+      transform: translateX(10px);
     }
 
     @keyframes copySuccessMessage {
@@ -64,15 +104,51 @@
   `;
   head.append(style);
 
+  // copy success message
   const message = document.createElement("div");
-  message.setAttribute("class", "copy-success-message");
+  message.setAttribute("id", "copy-success-message");
   message.innerText = "Copy success!";
   const body = document.querySelector("body");
   body.append(message);
 
+  // switch
+  const panel = document.createElement("div");
+  panel.setAttribute("id", "copy-selector-panel");
+  panel.innerHTML =
+    'copy selector：<input type="checkbox" id="copy-selector-switch" />';
+  body.append(panel);
+
+  const copySelectorSwitch = document.querySelector("#copy-selector-switch");
+  copySelectorSwitch.onclick = function (e) {
+    if (e.target.checked) {
+      const copySelectorModeStyle = document.createElement("style");
+      copySelectorModeStyle.setAttribute("type", "text/css");
+      copySelectorModeStyle.setAttribute("id", "copy-selector-mode-style");
+      copySelectorModeStyle.innerText = `
+        * {
+          cursor: pointer;
+          outline: 1px solid #000 !important;
+        }
+      `;
+      head.append(copySelectorModeStyle);
+      document.addEventListener("click", clickListenerFn, true);
+      document.addEventListener("mousemove", hoverListenerFn, true);
+    } else {
+      head.removeChild(document.querySelector("#copy-selector-mode-style"));
+      document
+        .querySelector(lastClickelector)
+        ?.classList.remove("copy-selector-focus");
+      document
+        .querySelector(lastHoverSelector)
+        ?.classList.remove("copy-selector-hover");
+      document.removeEventListener("click", clickListenerFn, true);
+      document.removeEventListener("mousemove", hoverListenerFn, true);
+    }
+  };
+
   // copy
   function copy(value) {
-    const message = document.querySelector(".copy-success-message");
+    const message = document.querySelector("#copy-success-message");
     message.classList.remove("show-copy-success-message");
     navigator.clipboard.writeText(value).then(() => {
       message.classList.add("show-copy-success-message");
@@ -235,27 +311,33 @@
   }
 
   // eventListener
-  document.addEventListener("click", (e) => {
+  let lastClickelector;
+  function clickListenerFn(e) {
+    if (e.target.id.startsWith("copy-selector")) return;
     e.preventDefault();
     const el = e.target;
-    el.classList.remove("selector-hover");
-    const selector = cssPath(el);
-    copy(selector);
-    const target = document.querySelector(selector);
-    target.classList.add("selector-focus");
-  });
+    el.classList.remove("copy-selector-hover");
+    const clickSelector = cssPath(el);
+    copy(clickSelector);
+    if (lastClickelector !== clickSelector) {
+      document
+        .querySelector(lastClickelector)
+        ?.classList.remove("copy-selector-focus");
+      el.classList.add("copy-selector-focus");
+      lastClickelector = clickSelector;
+    }
+  }
 
   let lastHoverSelector;
-  document.addEventListener("mousemove", (e) => {
+  function hoverListenerFn(e) {
     const el = e.target;
     const hoverSelector = cssPath(el);
     if (lastHoverSelector !== hoverSelector) {
-      const oldNode = document.querySelector(lastHoverSelector);
-      if (oldNode) {
-        oldNode.classList.remove("selector-hover");
-      }
-      el.classList.add("selector-hover");
+      document
+        .querySelector(lastHoverSelector)
+        ?.classList.remove("copy-selector-hover");
+      el.classList.add("copy-selector-hover");
       lastHoverSelector = hoverSelector;
     }
-  });
+  }
 })();
