@@ -2,7 +2,7 @@
 // @name         copy selector
 // @version      0.1
 // @description  获取页面元素最短 selector，效果同 chrome devtools 的 copy selector
-// @match        *
+// @match        *://*/*
 // @grant        none
 // ==/UserScript==
 
