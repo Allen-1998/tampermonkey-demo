@@ -11,7 +11,10 @@ Gets the shortest selector for the page element into your clipboard.
 ## Usage
 
 - Open the switch.
+![image](https://user-images.githubusercontent.com/73213399/189544648-8782c4c5-6c81-483c-a199-8044a8a1d7a7.png)
+
 - Click on the element where you want to get the path.
+![image](https://user-images.githubusercontent.com/73213399/189544666-fb60a95a-6392-4d18-9747-532f6bddd782.png)
 
 ## Thanks
 
