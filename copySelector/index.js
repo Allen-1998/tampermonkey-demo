@@ -54,11 +54,16 @@
       font-size: 14px !important;
       outline-style: none !important;
       z-index: 2147483647;
+      transform: translateX(calc(100% - 5px));
+      transition: transform 0.1s ease-in-out;
+    }
+    #copy-selector-panel:hover {
+      transform: translateX(0);
     }
     #copy-selector-switch {
       position: relative;
+      cursor: pointer;
       appearance: none;
-      outline: none;
       width: 24px;
       height: 14px;
       border: 1px solid #999;
