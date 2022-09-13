@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         copy selector
 // @namespace    https://github.com/Allen-1998
-// @version      0.2
+// @version      0.3
 // @description  Gets the shortest selector for a page element. The effect is the same as Chrome DevTools Copy Selector.
 // @author       Allen-1998
 // @match        *://*/*
@@ -54,11 +54,6 @@
       font-size: 14px !important;
       outline-style: none !important;
       z-index: 2147483647;
-      transform: translateX(calc(100% - 5px));
-      transition: transform 0.1s ease-in-out;
-    }
-    #copy-selector-panel:hover {
-      transform: translateX(0);
     }
     #copy-selector-switch {
       position: relative;
@@ -324,27 +319,23 @@
     e.preventDefault();
     const el = e.target;
     el.classList.remove("copy-selector-hover");
-    const clickSelector = cssPath(el).replace(".copy-selector-focus", "");
+    document
+      .querySelector(lastClickelector)
+      ?.classList.remove("copy-selector-focus");
+    const clickSelector = cssPath(el);
     copy(clickSelector);
-    if (lastClickelector !== clickSelector) {
-      document
-        .querySelector(lastClickelector)
-        ?.classList.remove("copy-selector-focus");
-      el.classList.add("copy-selector-focus");
-      lastClickelector = clickSelector;
-    }
+    lastClickelector = clickSelector;
+    el.classList.add("copy-selector-focus");
   }
 
   let lastHoverSelector;
   function hoverListenerFn(e) {
     const el = e.target;
+    document
+      .querySelector(lastHoverSelector)
+      ?.classList.remove("copy-selector-hover");
     const hoverSelector = cssPath(el);
-    if (lastHoverSelector !== hoverSelector) {
-      document
-        .querySelector(lastHoverSelector)
-        ?.classList.remove("copy-selector-hover");
-      el.classList.add("copy-selector-hover");
-      lastHoverSelector = hoverSelector;
-    }
+    lastHoverSelector = hoverSelector;
+    el.classList.add("copy-selector-hover");
   }
 })();
