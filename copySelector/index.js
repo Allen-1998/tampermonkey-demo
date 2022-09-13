@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         copy selector
 // @namespace    https://github.com/Allen-1998
-// @version      0.1
+// @version      0.2
 // @description  Gets the shortest selector for a page element. The effect is the same as Chrome DevTools Copy Selector.
 // @author       Allen-1998
 // @match        *://*/*
@@ -324,7 +324,7 @@
     e.preventDefault();
     const el = e.target;
     el.classList.remove("copy-selector-hover");
-    const clickSelector = cssPath(el);
+    const clickSelector = cssPath(el).replace(".copy-selector-focus", "");
     copy(clickSelector);
     if (lastClickelector !== clickSelector) {
       document
