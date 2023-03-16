@@ -317,6 +317,8 @@
   function clickListenerFn(e) {
     if (e.target.id.startsWith("copy-selector")) return;
     e.preventDefault();
+    e.stopImmediatePropagation();
+    e.stopPropagation();
     const el = e.target;
     el.classList.remove("copy-selector-hover");
     document
